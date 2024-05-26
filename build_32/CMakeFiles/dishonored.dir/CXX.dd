@@ -1,0 +1,19 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles\dishonored.dir\main.cpp.obj: dyndep
+
+build CMakeFiles\dishonored.dir\src\core.cpp.obj: dyndep
+
+build CMakeFiles\dishonored.dir\src\hooks\hooks.cpp.obj: dyndep
+
+build CMakeFiles\dishonored.dir\src\modules\module.cpp.obj: dyndep
+
+build CMakeFiles\dishonored.dir\src\modules\npc\npc.cpp.obj: dyndep
+
+build CMakeFiles\dishonored.dir\src\modules\maxpowers\maxpowers.cpp.obj: dyndep
+
+build CMakeFiles\dishonored.dir\src\modules\godmode\godmode.cpp.obj: dyndep
+
+build CMakeFiles\dishonored.dir\src\modules\items\items.cpp.obj: dyndep
+
+build CMakeFiles\dishonored.dir\src\modules\teleport\teleport.cpp.obj: dyndep
+

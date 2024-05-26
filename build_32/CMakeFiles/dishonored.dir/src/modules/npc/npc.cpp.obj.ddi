@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "CMakeFiles\\dishonored.dir\\src\\modules\\npc\\npc.cpp.obj",
+            "outputs": [
+                "CMakeFiles\\dishonored.dir\\src\\modules\\npc\\npc.cpp.obj.ddi"
+            ],
+            "requires": []
+        }
+    ]
+}

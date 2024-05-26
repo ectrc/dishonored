@@ -7,12 +7,19 @@ set(CMAKE_CXX_FLAGS /bigobj)
 
 add_subdirectory(external/libhat)
 add_subdirectory(external/minhook)
+add_subdirectory(external/sdk)
 
 add_library(dishonored SHARED
-        library.cpp
+        main.cpp
         src/core.cpp
-        src/hooks.cpp
+        src/hooks/hooks.cpp
+        src/modules/module.cpp
+        src/modules/npc/npc.cpp
+        src/modules/maxpowers/maxpowers.cpp
+        src/modules/godmode/godmode.cpp
+        src/modules/items/items.cpp
+        src/modules/teleport/teleport.cpp
 )
 
-target_link_libraries(dishonored PUBLIC libhat minhook)
+target_link_libraries(dishonored PUBLIC libhat minhook sdk)
 target_include_directories(dishonored PUBLIC include)

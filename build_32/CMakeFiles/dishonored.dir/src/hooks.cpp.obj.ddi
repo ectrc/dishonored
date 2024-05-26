@@ -1,0 +1,13 @@
+{
+    "version": 1,
+    "revision": 0,
+    "rules": [
+        {
+            "primary-output": "CMakeFiles\\dishonored.dir\\src\\hooks.cpp.obj",
+            "outputs": [
+                "CMakeFiles\\dishonored.dir\\src\\hooks.cpp.obj.ddi"
+            ],
+            "requires": []
+        }
+    ]
+}

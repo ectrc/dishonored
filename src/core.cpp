@@ -1,35 +1,70 @@
-#include <hooks.h>
-#include <core.h>
+#include "hooks/hooks.h"
+#include "core.h"
 
+#include <libhat.hpp>
 #include <minhook.h>
+#include <chrono>
+#include <thread>
 #include <windows.h>
 #include <iostream>
 
 namespace Patterns {
+    constexpr auto ProcessEvent = hat::compile_signature<"55 8B EC 6A ?? 68 ?? ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 83 EC ?? A1 ?? ?? ?? ?? 33 C5 89 45 ?? 53 56 57 50 8D 45 ?? 64 A3 ?? ?? ?? ?? 8B F1">();
 }
 
-namespace Address {
-    uintptr_t Executable = (uintptr_t)GetModuleHandle(nullptr);
-    uintptr_t DishonoredPlayerPawn = 0x0105F628;
+namespace Offsets {
+    uintptr_t BaseModule = (uintptr_t)GetModuleHandle(nullptr);
+    uintptr_t GObjects = BaseModule + 0x1023630;
+    uintptr_t GNames = BaseModule + 0x1035674;
+    uintptr_t GEngine = BaseModule + 0x104721C;
+    uintptr_t DishonoredEngine = BaseModule + 0x104721C;
+    uintptr_t DishonoredPlayerPawn = BaseModule + 0x105F628;
 
-//    uintptr_t TakeMoney = (uintptr_t)hat::find_pattern(Patterns::TakeMoney).get();
-//    uintptr_t PotionRegen = (uintptr_t)hat::find_pattern(Patterns::PotionRegen).get();
+    uintptr_t* ProcessEvent = (uintptr_t*)hat::find_pattern(Patterns::ProcessEvent).get();
 }
 
-DishonoredCore::DishonoredCore() {
-    this->playerPawn = *(DishonoredPlayerPawn**)(Address::Executable + Address::DishonoredPlayerPawn);
+Core::Core() {
+    GObjects = reinterpret_cast<TArray<UObject*>*>(Offsets::GObjects);
+    GNames = reinterpret_cast<TArray<FNameEntry*>*>(Offsets::GNames);
 
-    std::cout << "Player Pawn Address 0x" << std::hex << this->playerPawn << std::endl;
-    std::cout << "Player Pawn Health " << std::dec << this->playerPawn->Health << std::endl;
-
-    this->playerPawn->Health = 90;
-    this->playerPawn->MaxHealth = 90;
+    state = DishonoredState{};
+    state.GObjects = GObjects;
+    state.DishonoredEngine = *reinterpret_cast<UDishonoredEngine**>(Offsets::DishonoredEngine);
+    state.DishonoredPlayerPawn = *reinterpret_cast<ADishonoredPlayerPawn**>(Offsets::DishonoredPlayerPawn);
+    state.DishonoredPlayerController = reinterpret_cast<ADishonoredPlayerController*>(state.DishonoredPlayerPawn->Controller);
 
     MH_Initialize();
     MH_EnableHook(nullptr);
 }
 
-DishonoredCore::~DishonoredCore() {
+void Core::RegisterModule(const std::string &name, std::unique_ptr<Module> module) {
+    module->SetState(&state);
+    modules[name] = std::move(module);
+}
+
+void Core::WaitForExit() {
+    while (true) {
+        state.DishonoredEngine = *reinterpret_cast<UDishonoredEngine**>(Offsets::DishonoredEngine);
+        if (!state.DishonoredEngine) continue;
+        state.DishonoredPlayerPawn = *reinterpret_cast<ADishonoredPlayerPawn**>(Offsets::DishonoredPlayerPawn);
+        if (!state.DishonoredPlayerPawn) continue;
+        state.DishonoredPlayerController = reinterpret_cast<ADishonoredPlayerController*>(state.DishonoredPlayerPawn->Controller);
+        if (!state.DishonoredPlayerController) continue;
+
+        for (auto& [name, module] : modules) {
+            bool condition = module->IsOnce() ? GetAsyncKeyState(module->GetKey()) & 1 :  GetAsyncKeyState(module->GetKey());
+            if (condition) module->IsEnabled() ? module->Disable() : module->Enable();
+            if (module->IsEnabled()) module->OnTick();
+        }
+
+        if (GetAsyncKeyState(VK_END) & 1) break;
+
+        using namespace std::chrono_literals;
+        std::this_thread::sleep_for(100ms);
+    }
+}
+
+Core::~Core() {
     MH_DisableHook(nullptr);
     MH_Uninitialize();
 }
