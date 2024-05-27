@@ -9,56 +9,39 @@
 
 class Module {
 public:
-    Module(std::string title, int key) : title(std::move(title)), key(key), enabled(false) {}
+    Module(std::string _title, std::string _desc, int key) : title(std::move(_title)), description(std::move(_desc)), key(key), enabled(false), once(true) {
+        std::cout << description << '\n';
+    }
     virtual ~Module() = default;
 
     void Enable() {
         enabled = true;
-        std::cout << "Enabling " << title << std::endl;
+        once && std::cout << "Enabling " << title << std::endl;
         OnEnable();
     }
-
     void Disable() {
         enabled = false;
-        std::cout << "Disabling " << title << std::endl;
+        once && std::cout << "Disabling " << title << std::endl;
         OnDisable();
     }
+    void Toggle() { enabled ? Disable() : Enable(); }
 
-    void Toggle() {
-        enabled ? Disable() : Enable();
-    }
+    void SetState(DishonoredState* _state) { this->state = _state; }
+    void SetOnce(bool _once) { this->once = _once; }
 
-    void SetState(DishonoredState* state) {
-        this->state = state;
-    }
-
-    void SetOnce(bool once) {
-        this->once = once;
-    }
-
-    [[nodiscard]] std::string GetTitle() const {
-        return title;
-    }
-
-    [[nodiscard]] bool IsEnabled() const {
-        return enabled;
-    }
-
-    [[nodiscard]] int GetKey() const {
-        return key;
-    }
-
-    [[nodiscard]] bool IsOnce() const {
-        return once;
-    }
+    [[nodiscard]] std::string GetTitle() const { return title; }
+    [[nodiscard]] bool IsEnabled() const { return enabled; }
+    [[nodiscard]] int GetKey() const { return key; }
+    [[nodiscard]] bool IsOnce() const { return once; }
 
     virtual void OnTick() {}
     virtual void OnEnable() {}
     virtual void OnDisable() {}
 public:
-    DishonoredState* state;
+    DishonoredState* state{};
 private:
     std::string title;
+    std::string description;
     int key;
     bool enabled;
     bool once;

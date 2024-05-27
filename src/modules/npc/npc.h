@@ -7,7 +7,9 @@
 
 class NPCModule : public Module {
 public:
-    NPCModule(std::string title, int key) : Module(std::move(title), key) {}
+    NPCModule(std::string title, std::string desc, int key) : Module(std::move(title), std::move(desc), key) {
+        this->SetOnce(false);
+    }
     void OnEnable() override;
 };
 

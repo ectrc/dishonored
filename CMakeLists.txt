@@ -15,10 +15,10 @@ add_library(dishonored SHARED
         src/hooks/hooks.cpp
         src/modules/module.cpp
         src/modules/npc/npc.cpp
-        src/modules/maxpowers/maxpowers.cpp
-        src/modules/godmode/godmode.cpp
+        src/modules/powers/powers.cpp
+        src/modules/god/god.cpp
         src/modules/items/items.cpp
-        src/modules/teleport/teleport.cpp
+        src/modules/push/push.cpp
 )
 
 target_link_libraries(dishonored PUBLIC libhat minhook sdk)

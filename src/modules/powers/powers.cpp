@@ -1,8 +1,8 @@
-#include "maxpowers.h"
+#include "powers.h"
 
 #include <iostream>
 
-void MaxPowersModule::OnEnable() {
+void PowersModule::OnEnable() {
     for (auto power : state->DishonoredPlayerPawn->m_ActivePowers) {
         power->m_CurrentLevel = 2;
         power->m_pPowerTweaks->m_ManaCost = 0;

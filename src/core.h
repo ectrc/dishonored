@@ -13,8 +13,9 @@ public:
     Core();
     ~Core();
 
+    inline void Exit() { state.should_exit = true; }
     void WaitForExit();
-    void RegisterModule(const std::string& name, std::unique_ptr<Module> module);
+    void AddModule(std::unique_ptr<Module> module);
 private:
     std::map<std::string, std::unique_ptr<Module>> modules;
     DishonoredState state{};

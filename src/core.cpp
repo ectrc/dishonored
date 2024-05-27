@@ -3,7 +3,6 @@
 
 #include <libhat.hpp>
 #include <minhook.h>
-#include <chrono>
 #include <thread>
 #include <windows.h>
 #include <iostream>
@@ -16,7 +15,6 @@ namespace Offsets {
     uintptr_t BaseModule = (uintptr_t)GetModuleHandle(nullptr);
     uintptr_t GObjects = BaseModule + 0x1023630;
     uintptr_t GNames = BaseModule + 0x1035674;
-    uintptr_t GEngine = BaseModule + 0x104721C;
     uintptr_t DishonoredEngine = BaseModule + 0x104721C;
     uintptr_t DishonoredPlayerPawn = BaseModule + 0x105F628;
 
@@ -33,17 +31,24 @@ Core::Core() {
     state.DishonoredPlayerPawn = *reinterpret_cast<ADishonoredPlayerPawn**>(Offsets::DishonoredPlayerPawn);
     state.DishonoredPlayerController = reinterpret_cast<ADishonoredPlayerController*>(state.DishonoredPlayerPawn->Controller);
 
-    MH_Initialize();
-    MH_EnableHook(nullptr);
+    state.DishonoredPlayerPawn->m_pCurFactionTweak->m_EnemyFactions.clear();
+    state.DishonoredPlayerPawn->m_pCurFactionTweak->m_AlliedFactions.clear();
+    state.DishonoredPlayerPawn->m_pCurFactionTweak->m_AlliedFactions.push_back(state.DishonoredPlayerPawn->m_pCurFactionTweak);
+
+//    MH_Initialize();
+//    MH_CreateHook((void*)Offsets::ProcessEvent, (void*)ProcessEventHook, (void**)&ProcessEventOriginal);
+//    MH_EnableHook(nullptr);
 }
 
-void Core::RegisterModule(const std::string &name, std::unique_ptr<Module> module) {
+void Core::AddModule(std::unique_ptr<Module> module) {
     module->SetState(&state);
-    modules[name] = std::move(module);
+    modules[module->GetTitle()] = std::move(module);
 }
 
 void Core::WaitForExit() {
     while (true) {
+        if (state.should_exit) break;
+
         state.DishonoredEngine = *reinterpret_cast<UDishonoredEngine**>(Offsets::DishonoredEngine);
         if (!state.DishonoredEngine) continue;
         state.DishonoredPlayerPawn = *reinterpret_cast<ADishonoredPlayerPawn**>(Offsets::DishonoredPlayerPawn);
@@ -60,8 +65,10 @@ void Core::WaitForExit() {
         if (GetAsyncKeyState(VK_END) & 1) break;
 
         using namespace std::chrono_literals;
-        std::this_thread::sleep_for(100ms);
+        std::this_thread::sleep_for(10ms);
     }
+
+    this->~Core();
 }
 
 Core::~Core() {

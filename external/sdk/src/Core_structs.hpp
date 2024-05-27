@@ -33,14 +33,37 @@ struct FVector
 {
 	float                                              X;                                             // 0x0000 (0x0004) [0x0000000000000001] (CPF_Edit)    
 	float                                              Y;                                             // 0x0004 (0x0004) [0x0000000000000001] (CPF_Edit)    
-	float                                              Z;                                             // 0x0008 (0x0004) [0x0000000000000001] (CPF_Edit)    
+	float                                              Z;                                             // 0x0008 (0x0004) [0x0000000000000001] (CPF_Edit)
+
+    FVector operator+(const FVector& v) const {
+        return FVector(X + v.X, Y + v.Y, Z + v.Z);
+    }
+
+    FVector operator-(const FVector& v) const {
+        return FVector(X - v.X, Y - v.Y, Z - v.Z);
+    }
+
+    FVector operator*(const float& f) const {
+        return FVector(X * f, Y * f, Z * f);
+    }
+
+    FVector operator/(const float& f) const {
+        return FVector(X / f, Y / f, Z / f);
+    }
+
+    FVector operator+=(const FVector& v) {
+        X += v.X;
+        Y += v.Y;
+        Z += v.Z;
+        return *this;
+    }
 };
 
 // ScriptStruct Core.Object.Plane
 // 0x0004 (0x000C - 0x0010)
 struct FPlane : FVector
 {
-	float                                              W;                                             // 0x000C (0x0004) [0x0000000000000001] (CPF_Edit)    
+	float                                              W;                                             // 0x000C (0x0004) [0x0000000000000001] (CPF_Edit)
 };
 
 // ScriptStruct Core.Object.Guid
@@ -180,6 +203,10 @@ struct FMatrix
 	struct FPlane                                      YPlane;                                        // 0x0010 (0x0010) [0x0000000000000001] (CPF_Edit)    
 	struct FPlane                                      ZPlane;                                        // 0x0020 (0x0010) [0x0000000000000001] (CPF_Edit)    
 	struct FPlane                                      WPlane;                                        // 0x0030 (0x0010) [0x0000000000000001] (CPF_Edit)    
+
+    [[nodiscard]] float determinant() const {
+        return XPlane.X * YPlane.Y * ZPlane.Z + XPlane.Y * YPlane.Z * ZPlane.X + XPlane.Z * YPlane.X * ZPlane.Y - XPlane.Z * YPlane.Y * ZPlane.X - XPlane.Y * YPlane.X * ZPlane.Z - XPlane.X * YPlane.Z * ZPlane.Y;
+    }
 };
 
 // ScriptStruct Core.Object.BoxSphereBounds

@@ -7,7 +7,7 @@
 
 class ItemsModule : public Module {
 public:
-    ItemsModule(std::string title, int key) : Module(std::move(title), key) {}
+    ItemsModule(std::string title, std::string desc, int key) : Module(std::move(title), std::move(desc), key) {}
     void OnEnable() override;
 };
 
