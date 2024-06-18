@@ -19,4 +19,4 @@ https://github.com/ectrc/dishonored/assets/13946988/ae8cf66e-e873-4d2f-9051-a04f
 
 
 ## What is next?
-Currently, I have no access to process event aka any function in-game. Traditional hooking does not work. I am going to have to figure out how to unwind the asm manually and capture the values. Once I have got this, I can then hook into internal game logic and anything can be achieved.
+Currently, I have no access to process event aka any function in-game. Traditional hooking does not work. I am going to have to figure out how to unwind the asm manually and capture the values. Once I have got this, I can then hook into internal game logic and anything can be achieved. I want to do this because looping through GObjects is kinda scummy and cheaty.
