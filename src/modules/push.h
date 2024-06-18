@@ -1,7 +1,7 @@
 #ifndef DISHONORED_PUSH_H
 #define DISHONORED_PUSH_H
 
-#include "../module.h"
+#include "module.h"
 
 #include <utility>
 

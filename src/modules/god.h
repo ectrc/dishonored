@@ -1,7 +1,7 @@
 #ifndef DISHONORED_GOD_H
 #define DISHONORED_GOD_H
 
-#include "../module.h"
+#include "module.h"
 
 #include <utility>
 

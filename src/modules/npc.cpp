@@ -1,9 +1,6 @@
 #include "npc.h"
 
 #include <iostream>
-#include <numbers>
-#include <vector>
-
 void NPCModule::OnEnable() {
     for (auto object : *(this->state->GObjects)) {
         if (!object) continue;

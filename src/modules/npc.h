@@ -1,7 +1,7 @@
 #ifndef DISHONORED_NPC_H
 #define DISHONORED_NPC_H
 
-#include "../module.h"
+#include "module.h"
 
 #include <utility>
 

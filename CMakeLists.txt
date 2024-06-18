@@ -14,11 +14,13 @@ add_library(dishonored SHARED
         src/core.cpp
         src/hooks/hooks.cpp
         src/modules/module.cpp
-        src/modules/npc/npc.cpp
-        src/modules/powers/powers.cpp
-        src/modules/god/god.cpp
-        src/modules/items/items.cpp
-        src/modules/push/push.cpp
+        src/modules/npc.cpp
+        src/modules/powers.cpp
+        src/modules/god.cpp
+        src/modules/lock.cpp
+        src/modules/push.cpp
+        src/modules/nothing.cpp
+        src/modules/items.cpp
 )
 
 target_link_libraries(dishonored PUBLIC libhat minhook sdk)
