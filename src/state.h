@@ -50,6 +50,10 @@ struct DishonoredState {
 
         return camera_look_vector;
     }
+
+    [[nodiscard]] FVector GetLocation() const {
+        return DishonoredPlayerPawn->Location;
+    }
 };
 
 #endif

@@ -9,21 +9,13 @@
 
 class Module {
 public:
-    Module(std::string _title, std::string _desc, int key) : title(std::move(_title)), description(std::move(_desc)), key(key), enabled(false), once(true) {
+    Module(std::string _title, std::string _desc, int key) : title(std::move(_title)), description(std::move(_desc)), key(key), enabled(false), once(false) {
         std::cout << description << '\n';
     }
     virtual ~Module() = default;
 
-    void Enable() {
-        enabled = true;
-        once && std::cout << "Enabling " << title << std::endl;
-        OnEnable();
-    }
-    void Disable() {
-        enabled = false;
-        once && std::cout << "Disabling " << title << std::endl;
-        OnDisable();
-    }
+    void Enable();
+    void Disable();
     void Toggle() { enabled ? Disable() : Enable(); }
 
     void SetState(DishonoredState* _state) { this->state = _state; }
@@ -42,9 +34,9 @@ public:
 private:
     std::string title;
     std::string description;
-    int key;
+    int key; // virtual key code
     bool enabled;
-    bool once;
+    bool once; // marks if the module is a one time use
 };
 
 

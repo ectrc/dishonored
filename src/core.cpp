@@ -7,6 +7,8 @@
 #include <windows.h>
 #include <iostream>
 
+#define HOOK_PE
+
 namespace Patterns {
     constexpr auto ProcessEvent = hat::compile_signature<"55 8B EC 6A ?? 68 ?? ?? ?? ?? 64 A1 ?? ?? ?? ?? 50 83 EC ?? A1 ?? ?? ?? ?? 33 C5 89 45 ?? 53 56 57 50 8D 45 ?? 64 A3 ?? ?? ?? ?? 8B F1">();
 }
@@ -35,9 +37,11 @@ Core::Core() {
     state.DishonoredPlayerPawn->m_pCurFactionTweak->m_AlliedFactions.clear();
     state.DishonoredPlayerPawn->m_pCurFactionTweak->m_AlliedFactions.push_back(state.DishonoredPlayerPawn->m_pCurFactionTweak);
 
-//    MH_Initialize();
-//    MH_CreateHook((void*)Offsets::ProcessEvent, (void*)ProcessEventHook, (void**)&ProcessEventOriginal);
-//    MH_EnableHook(nullptr);
+#ifdef HOOK_PE
+    MH_Initialize();
+    MH_CreateHook((void*)Offsets::ProcessEvent, (void*)ProcessEventHook, (void**)&ProcessEventOriginal);
+    MH_EnableHook(nullptr);
+#endif
 }
 
 void Core::AddModule(std::unique_ptr<Module> module) {
